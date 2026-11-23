@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>For Ranon 🌸</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Quicksand:wght@400;600&display=swap">
+<style>
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  color-scheme:dark;
+  --bg1:#1d0b24; --bg2:#4a1a45; --ink:#fff4f8; --soft:#ffd0e2; --card:rgba(30,8,36,.62); --glow:#ff8fb8;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:radial-gradient(120% 90% at 50% 0%,var(--bg2),var(--bg1));color:var(--ink);font-family:"Quicksand",system-ui,sans-serif;overflow-x:hidden;text-align:center;text-shadow:0 1px 10px rgba(20,0,24,.7)}
+canvas{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}
+#tree{z-index:0}#petals{z-index:1}
+main{position:relative;z-index:2;min-height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:96px 22px 48px}
+.intro{transition:opacity .8s,transform .8s}
+.intro p{color:var(--soft);margin:0 0 22px;font-size:1.05rem}
+.bloom{width:150px;height:150px;border:0;background:none;cursor:pointer;animation:pulse 2.4s ease-in-out infinite;filter:drop-shadow(0 0 18px var(--glow))}
+.bloom svg{width:100%;height:100%}
+.hint{margin-top:14px;font-weight:600;letter-spacing:.08em;color:var(--ink);font-size:.95rem}
+@keyframes pulse{50%{transform:scale(1.08)}}
+.hide{opacity:0;transform:scale(.9);pointer-events:none;position:absolute}
+.stage{display:none;width:100%;max-width:440px}
+.stage.on{display:block}
+.r{opacity:0;transform:translateY(16px);transition:opacity 1s,transform 1s}
+.r.show{opacity:1;transform:none}
+.hb{font-family:"Great Vibes",cursive;font-size:clamp(2.6rem,13vw,3.6rem);margin:0;color:var(--ink);line-height:1.1}
+.name{font-family:"Great Vibes",cursive;font-size:clamp(4.6rem,25vw,7rem);margin:0;line-height:1;color:#ffd9e8;text-shadow:0 0 20px rgba(255,111,165,.75),0 2px 14px rgba(20,0,24,.95)}
+.age{margin:14px 0 6px;font-size:1.15rem;color:var(--soft)}
+.age b{font-size:2.4rem;color:var(--ink)}
+.card{background:var(--card);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(255,150,190,.35);border-radius:20px;padding:18px 20px;margin:14px 0;line-height:1.6;font-size:1.02rem;box-shadow:0 8px 30px rgba(255,111,165,.18)}
+.card{font-style:italic}
+.card em{color:var(--soft);font-style:normal;font-size:.85rem;display:block;margin-top:8px}
+.wishbtn{margin-top:10px;font:600 1rem "Quicksand",sans-serif;color:#fff;background:linear-gradient(135deg,#ff6fa5,#ff9ac0);border:0;border-radius:999px;padding:14px 28px;box-shadow:0 8px 24px rgba(255,111,165,.45);cursor:pointer}
+.cake{height:96px;position:relative;margin:18px auto 0;width:70px}
+.candle{position:absolute;bottom:0;left:30px;width:10px;height:56px;border-radius:3px;background:linear-gradient(#fff,#ffc2d9)}
+.flame{position:absolute;bottom:54px;left:27px;width:16px;height:26px;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;background:radial-gradient(#fff6c2,#ffb347 60%,#ff6f3c);box-shadow:0 0 22px 8px rgba(255,180,80,.6);opacity:0;transform:scale(.3);transform-origin:bottom;transition:opacity .6s,transform .6s}
+.flame.lit{opacity:1;transform:scale(1);animation:fl 1s ease-in-out infinite alternate}
+@keyframes fl{to{transform:scale(1.08,.94) rotate(2deg)}}
+.final{font-family:"Great Vibes",cursive;font-size:2rem;margin:22px 0 4px}
+.sig{color:var(--soft);font-size:.95rem}
+</style>
+</head>
+<body>
+<canvas id="tree"></canvas>
+<canvas id="petals"></canvas>
+<main>
+  <div class="intro" id="intro">
+    <p>Something small is waiting for you…</p>
+    <button class="bloom" id="go" aria-label="Open">
+      <svg viewBox="-50 -50 100 100"><g id="flw"></g><circle r="7" fill="#ffd36e"/></svg>
+    </button>
+    <div class="hint">TAP THE BLOSSOM</div>
+  </div>
+
+  <section class="stage" id="stage">
+    <h1 class="hb r" id="s1">Happy Birthday</h1>
+    <h2 class="name r" id="s2">Ranon</h2>
+    <div class="age r" id="s3">you’re turning <b id="n">0</b> tonight 🌸</div>
+    <div class="card r" id="s4">I hope your day is full of smiles,<br>good people,<br>and everything you love.</div>
+    <div class="card r" id="s5">Wishing you a great year ahead,<br>full of happiness and success.<br>You deserve all the good things.<em>Your friend, Mohamed</em></div>
+    <div class="r" id="s6">
+      <div class="cake"><div class="flame" id="fl"></div><div class="candle"></div></div>
+      <button class="wishbtn" id="wish">Make a wish ✨</button>
+    </div>
+    <div class="r" id="s7"><p class="final">May it come true.</p><div class="sig">Happy 17th, Ranon 🌸</div></div>
+  </section>
+</main>
+<script>
+(function(){
+  var TAU=Math.PI*2, tc=document.getElementById('tree'), pc=document.getElementById('petals');
+  var tx=tc.getContext('2d'), px=pc.getContext('2d'), W,H,D;
+  var petals=[];
+  function rnd(a,b){return a+Math.random()*(b-a)}
+
+  function flower(c,x,y,r,col){
+    c.save();c.translate(x,y);c.rotate(rnd(0,TAU));c.fillStyle=col;
+    for(var i=0;i<5;i++){c.rotate(TAU/5);c.beginPath();c.ellipse(0,-r*.6,r*.42,r*.62,0,0,TAU);c.fill();}
+    c.fillStyle='#ffd36e';c.beginPath();c.arc(0,0,r*.16,0,TAU);c.fill();c.restore();
+  }
+  function branch(c,x,y,a,len,w,d){
+    if(d>6||len<8){return}
+    var x2=x+Math.cos(a)*len,y2=y+Math.sin(a)*len;
+    c.strokeStyle='#b06a88';c.lineWidth=w;c.lineCap='round';
+    c.beginPath();c.moveTo(x,y);c.lineTo(x2,y2);c.stroke();
+    if(d>=3){var n=2+Math.floor(Math.random()*3);for(var i=0;i<n;i++){
+      var fx=x+(x2-x)*Math.random()+rnd(-8,8),fy=y+(y2-y)*Math.random()+rnd(-8,8);
+      flower(c,fx,fy,rnd(7,13)*(W<500?.8:1),['#ffc2d9','#ffd6e6','#ffadc9','#fff0f5'][Math.floor(Math.random()*4)]);}}
+    branch(c,x2,y2,a+rnd(.25,.55),len*rnd(.68,.8),w*.7,d+1);
+    branch(c,x2,y2,a-rnd(.25,.55),len*rnd(.68,.8),w*.7,d+1);
+  }
+  function drawTree(){
+    D=Math.min(window.devicePixelRatio||1,2);W=innerWidth;H=innerHeight;
+    [tc,pc].forEach(function(c){c.width=W*D;c.height=H*D});
+    tx.setTransform(D,0,0,D,0,0);px.setTransform(D,0,0,D,0,0);
+    tx.clearRect(0,0,W,H);
+    var L=Math.min(W,H)*.14+22;
+    branch(tx,-10,H*.06,.35,L,9,0);
+    branch(tx,W+10,H*.1,Math.PI-.35,L*1.05,9,0);
+    var m=tx.createLinearGradient(0,H*.14,0,H*.3);m.addColorStop(0,'rgba(0,0,0,0)');m.addColorStop(1,'rgba(0,0,0,1)');tx.globalCompositeOperation='destination-out';tx.fillStyle=m;tx.fillRect(0,0,W,H);tx.globalCompositeOperation='source-over';
+  }
+  function addPetal(x,y,burst){
+    petals.push({x:x,y:y,s:rnd(5,11),r:rnd(0,TAU),vr:rnd(-.03,.03),vx:burst?rnd(-4,4):rnd(-.4,.4),vy:burst?rnd(-5,-1):rnd(.6,1.5),ph:rnd(0,TAU),c:['#ffc2d9','#ffadc9','#ffe0ec','#ff9ec1'][Math.floor(Math.random()*4)]});
+  }
+  var rate=.25;
+  function loop(){
+    px.clearRect(0,0,W,H);
+    if(Math.random()<rate&&petals.length<140)addPetal(rnd(0,W),-12,false);
+    for(var i=petals.length-1;i>=0;i--){
+      var p=petals[i];p.ph+=.03;p.x+=p.vx+Math.sin(p.ph)*.6;p.y+=p.vy;p.vy+=p.vy<1.6?.03:0;p.vx*=.99;p.r+=p.vr;
+      if(p.y>H+20){petals.splice(i,1);continue}
+      px.save();px.translate(p.x,p.y);px.rotate(p.r);px.fillStyle=p.c;px.globalAlpha=.9;
+      px.beginPath();px.ellipse(0,0,p.s*.55,p.s,0,0,TAU);px.fill();px.restore();
+    }
+    requestAnimationFrame(loop);
+  }
+  function burst(n){for(var i=0;i<n;i++)addPetal(W/2+rnd(-30,30),H*.6,true)}
+
+  // big button flower
+  var g=document.getElementById('flw'),s='';
+  for(var i=0;i<5;i++)s+='<ellipse cx="0" cy="-22" rx="17" ry="26" fill="#ffb3cf" stroke="#ff8fb8" stroke-width="1.5" transform="rotate('+(i*72)+')"/>';
+  g.innerHTML=s;
+
+  drawTree();loop();
+  var rt;addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(drawTree,200)});
+
+  function show(id,t){setTimeout(function(){document.getElementById(id).classList.add('show')},t)}
+  document.getElementById('go').addEventListener('click',function(){
+    var intro=document.getElementById('intro');intro.classList.add('hide');
+    rate=.6;burst(70);
+    setTimeout(function(){
+      intro.style.display='none';
+      document.getElementById('stage').classList.add('on');
+      show('s1',50);show('s2',1100);show('s3',2300);
+      setTimeout(function(){var n=0,el=document.getElementById('n'),iv=setInterval(function(){n++;el.textContent=n;if(n>=17){clearInterval(iv);burst(40)}},90)},2400);
+      show('s4',4800);show('s5',6800);show('s6',8800);
+    },900);
+  });
+  document.getElementById('wish').addEventListener('click',function(){
+    this.style.display='none';
+    document.getElementById('fl').classList.add('lit');
+    setTimeout(function(){burst(90);show('s7',100);window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'})},2600);
+  });
+})();
+</script>
+</body>
+</html>
